@@ -10,23 +10,32 @@ export function Home() {
 
   const formValidationSchema = zod.object({
     task: zod.string().min(1, 'tarefe deve ter no mínimo 1 caracter'),
-    minutesDuration: zod.number()
+    minutesAmount: zod.number()
     .min(5, 'duração mínima de 5 minutos')
-    .max(60, 'duração máxima de 60 minutos')
+    .max(60, 'duração máxima de 60 minutos'),
+    
   })
+
+  type NewCycleFormData = zod.infer<typeof formValidationSchema>;
 
 
   const { 
     register, 
     handleSubmit, 
     watch, 
-    formState } = useForm({
+    formState,
+    reset
+  } = useForm<NewCycleFormData>({
     resolver: zodResolver(formValidationSchema),
-    
+    defaultValues: {
+      task: '',
+      minutesAmount: 0
+    }
   });
 
   function handleCreateNewCycle(data: any) {
     console.log(data);
+    reset();
   }
 
 
@@ -47,13 +56,13 @@ export function Home() {
             {...register('task')}
           />
 
-          <label htmlFor="minutesDuration">durante</label>
+          <label htmlFor="minutesAmount">durante</label>
           <MinutesAmountInput 
           type="number" 
-          id="minutesDuration" 
+          id="minutesAmount" 
           min={1} 
           /* max={60}  */
-          {...register('minutesDuration', { valueAsNumber: true})}
+          {...register('minutesAmount', { valueAsNumber: true})}
           />
           <span>minutos</span>
         </FormContainer>
