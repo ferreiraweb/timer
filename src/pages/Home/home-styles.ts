@@ -101,11 +101,9 @@ overflow: hidden;
 
 `
 
-export const StartCountdownButton = styled.button`
 
+export const CountdownButtonBase = styled.button`
 
-
-background-color: ${({theme})  => theme["green-500"] };
 color: ${props => props.theme["gray-100"]};
 width: 100%;
 
@@ -126,8 +124,32 @@ cursor: pointer;
   cursor: not-allowed;
 }
 
+
+
+`
+
+
+
+export const StartCountdownButton = styled(CountdownButtonBase)`
+
+background-color: ${({theme})  => theme["green-500"] };
+
+
+
 &:not(:disabled):hover {
   background-color: ${props => props.theme["green-700"]};
+
+}
+
+`
+
+
+export const StopCountdownButton = styled(CountdownButtonBase)`
+
+background-color: ${({theme})  => theme["red-700"] };
+
+&:not(:disabled):hover {
+  background-color: ${props => props.theme["red-500"]};
 
 }
 
