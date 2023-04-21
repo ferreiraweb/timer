@@ -1,61 +1,55 @@
+import { useContext } from "react";
 import { HistoryContainer, HistoryList, Status } from "./history-styles";
-
+import { CycleContext } from "../../contexts/cycles-context";
+import { formatDistanceToNow } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
 
 export function History() {
-    return (
-        <HistoryContainer>
-            <h1>Meu Histórico</h1>
+  const { cycles } = useContext(CycleContext);
 
-            <HistoryList>
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Tarefa</th>
-                            <th>Duração</th>
-                            <th>Início</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Tarefa</td>
-                            <td>20 minutos</td>
-                            <td>Há 3 meses</td>
-                            <td><Status statusColor="green">Concluido</Status></td>
-                        </tr>
-                        <tr>
-                            <td>Tarefa2</td>
-                            <td>20 minutos</td>
-                            <td>Há 5 meses</td>
-                            <td><Status statusColor="yellow">Em andamento</Status></td>
-                            
-                        </tr>
-                        <tr>
-                            <td>Tarefa3</td>
-                            <td>20 minutos</td>
-                            <td>Há 4 meses</td>
-                            <td><Status statusColor="green">Concluido</Status></td>
-                        </tr>
-                        <tr>
-                            <td>Tarefa4</td>
-                            <td>20 minutos</td>
-                            <td>Há 3 meses</td>
-                            <td><Status statusColor="red">Cancelado</Status></td>
-                        </tr>
-                        <tr>
-                            <td>Tarefa5</td>
-                            <td>20 minutos</td>
-                            <td>Há 3 meses</td>
-                            <td><Status statusColor="yellow">Em andamento</Status></td>
-                        </tr>
-                    </tbody>
-
-                </table>
-
-            </HistoryList>
-
-        </HistoryContainer>
-    )
+  return (
+    <HistoryContainer>
+      <h1>Meu Histórico</h1>
+      <pre>{JSON.stringify(cycles, null, 2)}</pre>;
+      <HistoryList>
+        <table>
+          <thead>
+            <tr>
+              <th>Tarefa</th>
+              <th>Duração</th>
+              <th>Início</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cycles.map((cycle) => {
+              return (
+                <tr key={cycle.id}>
+                  <td>{cycle.task}</td>
+                  <td>{cycle.minutesAmount} minutos</td>
+                  <td>
+                    {formatDistanceToNow(cycle.startDate, {
+                      addSuffix: true,
+                      locale: ptBR,
+                    })}
+                  </td>
+                  <td>
+                    {cycle.fineshedDate && (
+                      <Status statusColor="green">Concluído</Status>
+                    )}
+                    {cycle.interruptedDate && (
+                      <Status statusColor="red">Interrompido</Status>
+                    )}
+                    {!cycle.fineshedDate && !cycle.interruptedDate && (
+                      <Status statusColor="yellow">Em andamento</Status>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </HistoryList>
+    </HistoryContainer>
+  );
 }
